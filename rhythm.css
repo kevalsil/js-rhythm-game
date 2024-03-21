@@ -1,0 +1,440 @@
+root {
+    --degCD: 0;
+    --myHPpercent: 100;
+
+    font-family: '강한공군체';
+
+}
+
+#container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border: 3px solid rgb(51, 54, 68);
+    width: 30%;
+    min-width: 500px;
+    height: 100%;
+    user-select: none;
+
+}
+
+@keyframes stageClearAnimation {
+    25% {
+        transform: translate(calc(-50% + 10px), O);
+    }
+
+    50% {
+        transform: translate(calc(-50% - 5px), O);
+    }
+
+    75% {
+        transform: translate(calc(-50% + 5px), O);
+    }
+
+    100% {
+        transform: translate(calc(-50% - 10px), 0);
+    }
+}
+
+#mainContainer {
+    position: relative;
+    background: linear-gradient(to bottom, rgb(51, 54, 68), rgb(84, 91, 119));
+    width: 100%;
+    height: 75%;
+}
+
+.mainLine {
+    position: relative;
+    width: 25%;
+    height: 100%;
+    float: left;
+}
+
+.hitLight {
+    z-index: 4;
+    position: absolute;
+    top: 92%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: solid Tpx rgb(236, 233, 220);
+    box-shadow: 0 0 10px rgh(236, 233, 220),
+        0 0 25px rgb(236, 233, 220),
+        0 0 50px rgb(236, 233, 220);
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+    transition: width 0.1s, height 0.1s;
+}
+
+.note {
+    z-index: 2;
+    position: absolute;
+    transform: translate(0, -50%);
+    border-radius: 10px;
+    width: 100%;
+    height: 20px;
+    text-align: center;
+}
+
+.longnote {
+    z-index: 1.9;
+    position: absolute;
+    transform: translate(0, -50%);
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+.start {
+    transform: translate(0, calc(-100% + 10px));
+    border-radius: 10px;
+}
+
+.end {
+    transform: translate(0, -10px);
+    border-radius: 10px;
+}
+
+.whiteNote {
+    background: linear-gradient(to bottom, rgh(255, 255, 255), rgb(189, 189, 189));
+}
+
+.whiteLongNote {
+    background: rgb(255, 255, 255, 1);
+}
+
+.blueNote {
+    background: linear-gradient(to bottom, rgb(172, 255, 237), rgb(27, 164, 255));
+
+}
+
+.blueLongNote {
+    background: rgba(72, 182, 255, 1);
+}
+
+#mainCounter {
+    z-index: 4;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(221, 221, 221, 0.6);
+    font-size: 100px;
+    font-weight: 700;
+    text-align: center;
+}
+
+#mainFooter {
+    position: absolute;
+    top: 92%;
+    transform: translate(0, -50%);
+    background: rgb(238, 152, 39);
+    width: 100%;
+    height: 20px;
+}
+
+#mainFooterRate {
+    z-index: 4;
+    position: absolute;
+    top: 77%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(238, 238, 238);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#mainFooterText {
+    z-index: 4;
+    position: absolute;
+    top: 82%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(158, 158, 158);
+    font-size: 42px;
+    font-weight: 700;
+}
+
+#mainFooterTextDetail {
+    z-index: 4;
+    position: absolute;
+    top: 82%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    color: rgb(140, 161, 255);
+    font-size: 18px;
+
+}
+
+@keyframes entryFooterText {
+    0% {
+        font-size: 36px;
+    }
+
+    100% {
+        font-size: 42px;
+    }
+
+}
+
+#mainComboNumber {
+    z-index: 4;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(221, 221, 221, 0.6);
+    font-size: 80px;
+    font-weight: 700;
+    text-align: center;
+
+}
+
+@keyframes entryCombo {
+    0% {
+        transform: translate(-50%, -30%);
+    }
+
+    100% {
+        transform: translate(-50%, -50%);
+    }
+
+}
+
+#mainComboText {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(221, 221, 221, 0.6);
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+}
+
+#mainEnding {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(255, 255, 255);
+    font-size: 70px;
+    font-weight: 700;
+    font-style: italic;
+    text-align: center;
+    opacity: 0;
+}
+
+@keyframes entryEnding {
+    0% {
+        font-size: 100px;
+    }
+
+    100% {
+        font-size: 70px;
+    }
+}
+
+#mainContainer:after {
+    clear: both;
+}
+
+#footerContainer {
+    z-index: 3;
+    position: relative;
+    background: rgh(236, 236, 236);
+    width: 100%;
+    height: 10%;
+}
+
+.footerLine {
+    position: relative;
+    width: 25%;
+    height: 100%;
+    float: left;
+}
+
+.footerBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: solid 3px rgb(51, 54, 68);
+    border-radius: 20px;
+    background: rgb(197, 197, 207);
+    width: 50%;
+    height: 80%;
+    transition: all 0.1s;
+}
+
+.footerBtnText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgh(51, 54, 68);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.footerBtn:active {
+    border-top: solid 7px rgb(51, 54, 68);
+    background: rgb(238, 152, 39);
+}
+
+#songContainer {
+    z-index: 3;
+    position: relative;
+    background: rgb(51, 54, 68);
+    width: 100%;
+    height: 15%;
+}
+
+#songCD {
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: linear-gradient(calc(var(--degCD) * 1deg), rgb(177, 176, 176) 30%, rgb(255, 255, 255), rgb(190, 190, 190) 70%);
+    width: 100px;
+    height: 100px;
+}
+
+#songCDHole {
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgb(51, 54, 68);
+    width: 30px;
+    height: 30px;
+}
+
+#songTitle {
+    position: absolute;
+    top: 30%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+#noteSpeed {
+    position: absolute;
+    top: 15%;
+    left: 5%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+
+}
+
+#HPContainer {
+    position: absolute;
+    bottom: 0;
+    transform: translate(-100%, 0);
+    border: solid 3px rgb(51, 54, 68);
+    background: rgb(84, 91, 119);
+    width: 20px;
+    height: 50%;
+}
+
+#myHP {
+    position: absolute;
+    bottom: 0;
+    background: rgh(255, 255, 255);
+    width: 100%;
+    height: calc(var(--myHPpercent) * 1%);
+}
+
+#escContainer {
+    z-index: 5;
+    position: fixed;
+    top: 0;
+    left: O;
+    background: rgb(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0;
+}
+
+#escBtnBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
+.escBtn {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 15px;
+    background: rgb(84, 91, 119);
+    width: 200px;
+    color: white;
+    padding: 15px;
+    margin: 15px 0;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+
+}
+
+.escBtnSelect {
+    background: rgb(178, 182, 196);
+    color: rgb(51, 54, 68);
+}
+
+#overContainer {
+    z-index: 5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgb(0, 0, 0);
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0;
+
+}
+
+#gameOver {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 80px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#gameOverReplay {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+    background: rgb(84, 91, 119);
+    color: white;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    opacity: 0;
+}

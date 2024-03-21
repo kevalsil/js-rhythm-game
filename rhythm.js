@@ -500,6 +500,254 @@ function startTimer() {
         //최종 판단
         if (passCountAll == passCount) {
             pauseGame();
+            if (passCount == perfectCount) {
+                id_mainEnding.innerHTML = 'PERFECT <br>COMBO';
+            } else
+                if (passCount == (perfectCount + goodCount)) {
+                    id_mainEnding.innerHTML = "ALL<br>COMBO";
+                } else {
+                    id_mainEnding.innerHTML = 'CLEAR';
+                }
+            //alert('${passCountAll)/S{passCount)’);
+            setTimeout(function () {
+                id_mainEnding.style.opacity = '1';
+                id_mainEnding.style.animation = 'none';
+                id_mainEnding.offsetWidth;
+                id_mainEnding.style.animation = 'entryEnding 0.2 s ';
+                setTimeout(function () {
+                    id_container.style.animation = 'none';
+                    id_container.offsetWidth;
+                    id_container.style.animation = 'stageClearAnimation 0.25';
+                }, 200); id_mainFooterText.innerHTML = ''; id_mainFooterTextDetail.innerHTML = ''; id_mainComboNumber.innerHTML = '';
+                id_mainComboText.innerHTML = '';
+            }, 1500);
+
+        }
+        //1카운트 = 10ms
+        timeCount = timeCount + 10;
+    }, 10);
+}
+//게임 시작
+startGame();
+
+function clearTimer() {
+    if (timer != null) {
+        clearlnterval(timer);
+    }
+    for (i = 0; i < 4; i++) {
+        document.getElementByld(`l${i + 1}`).innerHTML = `<div class="hitLight" id = "hL${i + 1}"></div>`;
+    }
+    noteList = [[], [], [], []];
+    notelndex = [0, 0, 0, 0];
+    noteCount = 0;
+    timeCount = 10;
+    comboCount = 0;
+    perfectCount = 0;
+    goodCount = 0;
+    badCount = 0;
+    missCount = 0;
+    passCount = 0;
+    esc = false;
+    escMenu = 1;
+    startCount = false;
+    gameOver = false;
+    prevLongNoteYN = [false, false, false, false]; //S =& ZEX|0{£
+    pressLongNoteYN = [false, false, false, false]; // 2= & Q05
+    longNoteTerm = [0, 0, 0, 0]; //2-E H& &xt
+    longNoteTermRecode = [0, 0, 0, 0]; //8=E &g &Xt 7|28
+    longNotePanjung = ['', '', '', ''];
+    longNoteStartend = [0, 0, 0, 0];
+
+
+    //체력 원상복구
+    myHP = 1000;
+    theme.style.setProperty('--myHPpercent', 100);
+    id_myHP.style.background = "white";
+    id_mainFooterText.innerHTML = '';
+    id_mainFooterTextDetail.innerHTML = '';
+    id_mainComboNumber.innerHTML = '';
+    id_mainComboText.innerHTML = '';
+    id_mainFooterRate.innerHTML = 'RATE 0.00%';
+    id_mainEnding.style.opacity = '0';
+}
+
+//이벤트
+let check = [false, false, false, false];//
+let press = [false, false, false, false];//71 +20)
+window.addEventListener('keydown', function (e) {
+    //alert(e.keyCode); //78
+    let index = 0;
+    if (e.keyCode == 68) {//D
+        index = 1;
+    } else if (e.keyCode == 70) {//F
+        index = 2;
+    } else if (e.keyCode == 74) {//J
+        index = 3;
+    } else if (e.keyCode == 75) {//K
+        index = 4;
+    } else if (e.keyCode == 27) {//ESC
+        if (esc == false) {
+            esc = true;
+            pauseGame();
+            id_escContainer.style.opacity = '1';
+            id_escContainer.style.pointerEvents = 'all';
+            escMenu = 1;
+        } else {//esc 상태에서 esc 한 번 더 누르면
+            esc = false;
+            id_escConnectBtn.click();
+        }
+    } else if (e.keyCode == 49) {//1 속도 감소
+        noteSpeed--;
+        if (noteSpeed < 10) {
+            noteSpeed = 10;
+        }
+        localStorage.setItem('noteSpeed', noteSpeed);
+        id_noteSpeed.innerHTML = `x${(noteSpeed * 0.1).toFixed(1)}`;
+    } else if (e.keyCode == 50) {//2 속도 증가
+        noteSpeed++;
+        if (noteSpeed > 99) {
+        }
+        noteSpeed = 99;
+        localStorage.setItem('noteSpeed', noteSpeed);
+        id_noteSpeed.innerHTML = `x${(noteSpeed * 0.1).toFixed(1)}`;
+    }
+
+    if (index = 0) {//DFJK
+        let indexArray = index - 1;
+        if (check[indexArray] == false && press[indexArray] == false) {
+            check[indexArray] = true;
+            press[indexArray] = true;
+            if (pressLongNoteYN[indexArray] != true) {//롱노트 누르는게 아니면 누르기 해제
+                /*
+                setTimeout(function(){
+                    checkfindexArray] = false;
+                },100); */
+            }
+            let id_line_temp = document.getElementByld(`l${index}`);
+            let id_footer_temp = document.getElementByld(`f${index}`);
+            let id_hitLight_temp = document.getElementByld(`hL${index}`);
+            id_line_temp.style.background = 'linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(238, 152, 39, 0.7))';
+            id_footer_temp.style = 'border-top: solid 7px rgb(1, 54, 68); background: rgb(238, 152, 39)';
+            id_hitlight_temp.style.opacity = '1';
+            id_hitlight_temp.stylewidth = '100px'
+            id_hitLight_temp.style.height = '100px';
         }
     }
-}
+    //esc
+    if (esc == true) {
+        if (e.keyCode == 13) { //Enter
+            document.getElementByld('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//현재 메뉴 스타일 삭제
+            document.getElementByld('escBtnBox').children[0].classListadd('escBtnSelect');//첫번째 선택으로 초기화
+            if (escMenu == 1) { //이어하기
+                id_escConnectBtn.click();
+            } else if (escMenu == 2) { //재시작
+                id_escReplayBtn.click();
+            } else if (escMenu == 3) { //환경설정
+                id_escSettingBtn.click()
+            } else if (escMenu == 4) { //메인화면으로
+                id_escLobbyBtn.click();
+            }
+        } else if (e.keyCode == 40) { //아래
+            let escMenuDown = escMenu + 1; //아래 자식 요소로
+            if (escMenuDown > 4) {
+                escMenuDown = 1; //넘으면 초기화
+            }
+            document.getElementByld('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//이전 메뉴 삭제
+            document.getElementByld('escBtnBox').children[escMenuDown - 1].classList.toggle('escBtnSelect');//다음 메뉴 획득
+            escMenu = escMenuDown;
+        } else if (e.keyCode == 38) { //9
+            let escMenuDown = escMenu - 1; //아래 자식 요소로
+            if (escMenuDown < 1) {
+                escMenuDown = 4; //넘으면 초기화
+            }
+            document.getElementByld('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//이전 메뉴 삭제
+            document.getElementByld('escBtnBox').children[escMenuDown - 1].classList.toggle('escBtnSelect');//다음 메뉴 획득
+            escMenu = escMenuDown;
+        }
+
+    } if (gameOver == true && id_gameOverReplay.style.opacity == '1') {
+        if (e.keyCode == 13) { //Enter
+            id_gameOverReplay.click();
+        }
+    }
+});
+window.addEventListener('keyup', function (e) {
+    let index = 0;
+    if (e.keyCode == 68) { //D
+        index = 1;
+    } else if (e.keyCode == 70) { //F
+        index = 2;
+    } else if (e.keyCode == 74) { //)
+        index = 3;
+    } else if (ekeyCode == 75) { //K
+        index = 4;
+    }
+    if (index != 0) {
+        check[index - 1] = false;
+        press[index - 1] = false;
+        let id_line_temp = document.getElementByld(`l${index}`);
+        let id_footer_temp = document.getElementByld(`f${index}`);
+        let id_hitLight_temp = document.getElementByld(`hL${index}`);
+        id_line_temp.style.background = 'rgb(0,0,0,0)';
+        id_footer_temp.style = 'border-top: solid 3px rgb(51, 54, 68); background: rgb(197, 197, 207);';
+        id_hitLight_temp.style.opacity = '0'
+        id_hitLight_temp.style.width = '50px';
+        id_hitLight_temp.style.height = '50px';
+    }
+});
+//ESC 이어하기
+id_escConnectBtn.addEventListener('click', function () {
+    id_escContainer.style.opacity = '0'
+    id_escContainer.style.pointerEvents = 'none';
+    esc = false;
+
+    startGame();
+});
+//ESC 재시작
+id_escReplayBtn.addEventListener('click', function () {
+    id_escContainer.style.opacity = '0';
+    id_escContainer.style.pointerEvents = 'none';
+    esc = false;
+
+    clearTimer();
+    startGame();
+});
+//ESC 환경설정
+id_escSettingBtn.addEventListener('click', function () {
+    id_escContainer.style.opacity = '0'
+    id_escContainer.style.pointerEvents = 'none';
+    esc = false;
+
+    clearTimer();
+    startGame();
+});
+// ESC 메인화면으로
+id_escLobbyBtn.addEventListener('click', function () {
+    id_escContainer.style.opacity = '0';
+    id_escContainer.style.pointerEvents = 'none';
+    esc = false;
+
+    clearTimer();
+    location.href = "../html/lobby.html";
+});
+//게임오버 다시하기
+id_gameOverReplay.addEventlistener('click',
+    function () {
+        id_overContainer.style.transition = 'none';
+        id_overContainer.style.opacity = '0'
+        id_gameOverReplay.style.opacity = '0'
+        id_overContainer.style.pointerEvents = 'none';
+
+        startGame();
+    });
+//CD돌리기
+let degCD = 0;
+let timerCD = setinterval(function () {
+    degCD = degCD + 2;
+    if(degCD >= 360){
+        degCD = 0;
+    }
+    theme.style.setProperty('--degCD',degCD);
+}, 100);
+
+//id_songTilte.innerHTML = songList[sessionStorage.getItem('songNum')-1][3];
