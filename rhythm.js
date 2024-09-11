@@ -3,7 +3,7 @@ const id_testPage = document.getElementById('testPage');
 const id_l1 = document.getElementById('l1');
 const id_l2 = document.getElementById('l2');
 const id_l3 = document.getElementById('l3');
-const id_l4 = document.getElementById('14');
+const id_l4 = document.getElementById('l4');
 const id_f1 = document.getElementById('f1');
 const id_f2 = document.getElementById('f2');
 const id_f3 = document.getElementById('f3');
@@ -15,14 +15,14 @@ const id_hL4 = document.getElementById('hL4');
 const id_footerBtn = document.getElementsByClassName('footerBtn');
 const id_mainCounter = document.getElementById('mainCounter');
 const id_mainComboNumber = document.getElementById('mainComboNumber');
-const id_mainComboText = document.getElementById('mainCombo Text');
+const id_mainComboText = document.getElementById('mainComboText');
 const id_mainEnding = document.getElementById('mainEnding');
 const id_mainFooterRate = document.getElementById('mainFooterRate');
-const id_mainFooterText = document.getElementById('main FooterText');
+const id_mainFooterText = document.getElementById('mainFooterText');
 const id_mainFooterTextDetail = document.getElementById('mainFooterTextDetail');
 const id_noteSpeed = document.getElementById('noteSpeed');
 const id_myHP = document.getElementById('myHP');
-const id_songTilte = document.getElementById('songTitle');
+const id_songTitle = document.getElementById('songTitle');
 
 const id_escContainer = document.getElementById('escContainer');
 const id_escConnectBtn = document.getElementById('escConnectBtn');
@@ -202,8 +202,8 @@ class Note {
         noteList[this.line - 1].shift();//노트 리스트에서 자신 삭제
         document.getElementById(`l${this.line}`).children[1].remove();//라인 요소에서 자신 삭제(0은 빛)
         if (noteList[this.line - 1].length > 0) {//노트가 하나라도 존재하면
-            for (let iㅑ = 0; iㅑ < noteList[this.line - 1].length; ㅑi++) {
-                noteList[this.line - 1][ii].sequence--// 177
+            for (let ii = 0; ii < noteList[this.line - 1].length; ii++) {
+                noteList[this.line - 1][ii].sequence--;
             }
         }
         //document.getElementById(${this.type+String(this.index)}).style.display = 'none';
@@ -371,7 +371,7 @@ function startGame() {
             id_mainCounter.innerHTML = '';
             startCount = false;
             startTimer();
-            clearlnterval(timerCounter);
+            clearInterval(timerCounter);
         } else if (timerCount >= 2000) {
             id_mainCounter.innerHTML = '1';
         } else if (timerCount >= 1000) {
@@ -393,7 +393,7 @@ function pauseGame() {
         startCount = false;
     }
     else if (startCount == false) {//게임 중인 경우
-        clearlnterval(timer);
+        clearInterval(timer);
     }
 }
 
@@ -532,10 +532,10 @@ startGame();
 
 function clearTimer() {
     if (timer != null) {
-        clearlnterval(timer);
+        clearInterval(timer);
     }
     for (i = 0; i < 4; i++) {
-        document.getElementByld(`l${i + 1}`).innerHTML = `<div class="hitLight" id = "hL${i + 1}"></div>`;
+        document.getElementById(`l${i + 1}`).innerHTML = `<div class="hitLight" id = "hL${i + 1}"></div>`;
     }
     noteList = [[], [], [], []];
     notelndex = [0, 0, 0, 0];
@@ -612,7 +612,7 @@ window.addEventListener('keydown', function (e) {
         id_noteSpeed.innerHTML = `x${(noteSpeed * 0.1).toFixed(1)}`;
     }
 
-    if (index = 0) {//DFJK
+    if (index != 0) {//DFJK
         let indexArray = index - 1;
         if (check[indexArray] == false && press[indexArray] == false) {
             check[indexArray] = true;
@@ -623,21 +623,21 @@ window.addEventListener('keydown', function (e) {
                     checkfindexArray] = false;
                 },100); */
             }
-            let id_line_temp = document.getElementByld(`l${index}`);
-            let id_footer_temp = document.getElementByld(`f${index}`);
-            let id_hitLight_temp = document.getElementByld(`hL${index}`);
+            let id_line_temp = document.getElementById(`l${index}`);
+            let id_footer_temp = document.getElementById(`f${index}`);
+            let id_hitLight_temp = document.getElementById(`hL${index}`);
             id_line_temp.style.background = 'linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(238, 152, 39, 0.7))';
             id_footer_temp.style = 'border-top: solid 7px rgb(1, 54, 68); background: rgb(238, 152, 39)';
             id_hitlight_temp.style.opacity = '1';
-            id_hitlight_temp.stylewidth = '100px'
+            id_hitLight_temp.style.width = '100px'
             id_hitLight_temp.style.height = '100px';
         }
     }
     //esc
     if (esc == true) {
         if (e.keyCode == 13) { //Enter
-            document.getElementByld('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//현재 메뉴 스타일 삭제
-            document.getElementByld('escBtnBox').children[0].classListadd('escBtnSelect');//첫번째 선택으로 초기화
+            document.getElementById('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//현재 메뉴 스타일 삭제
+            document.getElementById('escBtnBox').children[0].classListadd('escBtnSelect');//첫번째 선택으로 초기화
             if (escMenu == 1) { //이어하기
                 id_escConnectBtn.click();
             } else if (escMenu == 2) { //재시작
@@ -652,16 +652,16 @@ window.addEventListener('keydown', function (e) {
             if (escMenuDown > 4) {
                 escMenuDown = 1; //넘으면 초기화
             }
-            document.getElementByld('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//이전 메뉴 삭제
-            document.getElementByld('escBtnBox').children[escMenuDown - 1].classList.toggle('escBtnSelect');//다음 메뉴 획득
+            document.getElementById('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//이전 메뉴 삭제
+            document.getElementById('escBtnBox').children[escMenuDown - 1].classList.toggle('escBtnSelect');//다음 메뉴 획득
             escMenu = escMenuDown;
         } else if (e.keyCode == 38) { //9
             let escMenuDown = escMenu - 1; //아래 자식 요소로
             if (escMenuDown < 1) {
                 escMenuDown = 4; //넘으면 초기화
             }
-            document.getElementByld('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//이전 메뉴 삭제
-            document.getElementByld('escBtnBox').children[escMenuDown - 1].classList.toggle('escBtnSelect');//다음 메뉴 획득
+            document.getElementById('escBtnBox').children[escMenu - 1].classList.toggle('escBtnSelect');//이전 메뉴 삭제
+            document.getElementById('escBtnBox').children[escMenuDown - 1].classList.toggle('escBtnSelect');//다음 메뉴 획득
             escMenu = escMenuDown;
         }
 
@@ -679,15 +679,15 @@ window.addEventListener('keyup', function (e) {
         index = 2;
     } else if (e.keyCode == 74) { //)
         index = 3;
-    } else if (ekeyCode == 75) { //K
+    } else if (e.keyCode == 75) { //K
         index = 4;
     }
     if (index != 0) {
         check[index - 1] = false;
         press[index - 1] = false;
-        let id_line_temp = document.getElementByld(`l${index}`);
-        let id_footer_temp = document.getElementByld(`f${index}`);
-        let id_hitLight_temp = document.getElementByld(`hL${index}`);
+        let id_line_temp = document.getElementById(`l${index}`);
+        let id_footer_temp = document.getElementById(`f${index}`);
+        let id_hitLight_temp = document.getElementById(`hL${index}`);
         id_line_temp.style.background = 'rgb(0,0,0,0)';
         id_footer_temp.style = 'border-top: solid 3px rgb(51, 54, 68); background: rgb(197, 197, 207);';
         id_hitLight_temp.style.opacity = '0'
@@ -731,7 +731,7 @@ id_escLobbyBtn.addEventListener('click', function () {
     location.href = "../html/lobby.html";
 });
 //게임오버 다시하기
-id_gameOverReplay.addEventlistener('click',
+id_gameOverReplay.addEventListener('click',
     function () {
         id_overContainer.style.transition = 'none';
         id_overContainer.style.opacity = '0'
@@ -742,7 +742,7 @@ id_gameOverReplay.addEventlistener('click',
     });
 //CD돌리기
 let degCD = 0;
-let timerCD = setinterval(function () {
+let timerCD = setInterval(function () {
     degCD = degCD + 2;
     if(degCD >= 360){
         degCD = 0;
