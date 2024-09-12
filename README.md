@@ -1,7 +1,7 @@
 # js-rhythm-game
 
 [>>리듬게임 테스트<<](https://kevalsil.com/js-rhythm-game/)
-
+(pc에서만 작동)
 
 <br>
 <img src="./Screenshot/game.png" width="50%">
