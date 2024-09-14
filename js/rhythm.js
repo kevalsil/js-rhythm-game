@@ -4,7 +4,7 @@ const GOOD_SCORE = 1;
 const BAD_PENALTY = 40;
 const MISS_PENALTY = 80;
 const MAX_HP = 1000;
-const BASE_SCORE = 100; //노트 한 개 칠 때마다 얻는 점수
+const BASE_SCORE = 10; //노트 한 개 칠 때마다 얻는 점수
 
 const theme = document.querySelector(':root');
 const styles = window.getComputedStyle(theme);
@@ -47,12 +47,13 @@ const gameState = {
     noteIndex: [0, 0, 0, 0], //필드에 존재했던 노트 개수(0부터)
     noteCount: 0, //필드에 만들어진 노트 개수(1이 1개)
     timeCount: 10,
-    comboCount: 0,
+    comboCount: 0, //현재 실시간 콤보
     perfectCount: 0,
     goodCount: 0,
     badCount: 0,
     missCount: 0,
     passCount: 0,
+    totalCombo: 0, //총 콤보 성공 수
     score: 0, //최종 점수
     maxCombo: 0, //가장 많은 콤보 수
     myHP: MAX_HP,
@@ -74,15 +75,15 @@ const gameState = {
 // Game Settings
 //////////게임 기본 설정///////////
 const gameSettings = {
-    passCountAll: 100, //쳐야 할 전체 노트 개수
-    makeSpeed: 150, //노트 생성 속도(ms)
-    mujuk: true, //무적여부
+    passCountAll: 80, //쳐야 할 전체 노트 개수
+    makeSpeed: 200, //노트 생성 속도(ms)
+    mujuk: false, //무적여부
     longNoteTermList: [1, 2, 4, 4], //롱노트 기간 개수
-    noteSpeed: parseInt(localStorage.getItem('noteSpeed')) || 50
+    noteSpeed: 50 //parseInt(localStorage.getItem('noteSpeed')) || 50
 };
 
 // Adjust settings based on song number
-const songNum = parseInt(sessionStorage.getItem('songNum'));
+const songNum = 0//parseInt(sessionStorage.getItem('songNum'));
 if (songNum === 3) {
     gameSettings.makeSpeed = 100;
 } else if (songNum === 4) {
@@ -253,6 +254,7 @@ function comboCounter(panjung, fastslow, type, line) {
             color = 'rgb(238, 192, 39)';
             gameState.comboCount++;
             gameState.perfectCount++;
+            gameState.totalCombo++;
             gameState.score += 2 * BASE_SCORE * Math.sqrt(gameState.comboCount);
             gameState.myHP = Math.min(gameState.myHP + PERFECT_SCORE, MAX_HP);
             break;
@@ -261,6 +263,7 @@ function comboCounter(panjung, fastslow, type, line) {
             color = 'rgb(39, 238, 172)';
             gameState.comboCount++;
             gameState.goodCount++;
+            gameState.totalCombo++;
             gameState.score += 1 * BASE_SCORE * Math.sqrt(gameState.comboCount);
             gameState.myHP = Math.min(gameState.myHP + GOOD_SCORE, MAX_HP);
             break;
@@ -520,53 +523,23 @@ function checkGameEnd() {
         } else if (gameState.passCount === (gameState.perfectCount + gameState.goodCount)) {
             endingText = "ALL<br>COMBO";
         }
+
+        // localStorage에 결과값 저장
+        localStorage.setItem('score', Math.round(gameState.score));
+        localStorage.setItem('rate', (((gameState.perfectCount + gameState.goodCount * 0.6 + gameState.badCount * 0.2) / gameState.passCount) * 100).toFixed(2));
+        localStorage.setItem('maxCombo', gameState.maxCombo);
+        localStorage.setItem('totalCombo', gameState.totalCombo);
+        localStorage.setItem('perfectCount', gameState.perfectCount);
+        localStorage.setItem('goodCount', gameState.goodCount);
+        localStorage.setItem('badCount', gameState.badCount);
+        localStorage.setItem('missCount', gameState.missCount);
+
         showEnding(endingText);
 
-        // 예시: 게임 끝났을 때 호출
-        rate = (((gameState.perfectCount + gameState.goodCount * 0.6 + gameState.badCount * 0.2) / gameState.passCount) * 100).toFixed(2);
-        console.log(rate, Math.round(gameState.score), gameState.maxCombo)
-        sendScoreToServer('익명', Math.round(gameState.score), gameState.maxCombo, rate);
-        // 예시: 랭킹을 가져와 HTML에 표시
-        //fetchRankings();
+        //서버로 랭킹 정보 전송
+        //sendScoreToServer('노래제목', '익명', Math.round(gameState.score), rate);
     }
 }
-
-function sendScoreToServer(name, score, combo, accuracy) {
-    fetch('http://172.30.1.68:5000/submit-score', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            name: name,
-            score: score,
-            combo: combo,
-            accuracy: accuracy
-        })
-    })
-        .then(response => response.text())
-        .then(data => {
-            console.log('Success:', data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
-function fetchRankings() {
-    fetch('http://172.30.1.68:5000/rankings')
-        .then(response => response.json())
-        .then(data => {
-            let rankingHtml = '';
-            data.forEach((rank, index) => {
-                rankingHtml += `<li>${index + 1}. ${rank.name} - ${rank.score}점, 콤보: ${rank.combo}, 정확도: ${rank.accuracy}%</li>`;
-            });
-            document.getElementById('ranking-list').innerHTML = rankingHtml;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-  
-  
 
 function showEnding(endingText) {
     setTimeout(function () {
@@ -579,6 +552,9 @@ function showEnding(endingText) {
             domElements.container.style.animation = 'none';
             domElements.container.offsetWidth;
             domElements.container.style.animation = 'stageClearAnimation 0.25s';
+            setTimeout(function () {
+                window.location.href = 'result.html';
+            }, 2000);
         }, 200);
         resetUI();
     }, 1500);
@@ -801,7 +777,7 @@ function handleEscLobby() {
     domElements.escContainer.style.opacity = '0';
     domElements.escContainer.style.pointerEvents = 'none';
     clearTimer();
-    location.href = "../html/lobby.html";
+    location.href = "main.html";
 }
 //게임오버 다시하기
 function handleGameOverReplay() {

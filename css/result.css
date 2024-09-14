@@ -38,8 +38,21 @@ body {
 }
 
 .grade {
-    font-size: 120px;
-    color: #f39c12;
+    font-size: 150px;
+    font-weight: bold;
+    margin: 20px;
+    background: linear-gradient(45deg, #000, #000); /* Default */
+    color: transparent; /* Hide text color */
+    background-clip: text; /* Apply gradient to text */
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; /* For WebKit browsers */
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
 }
 
 .score {

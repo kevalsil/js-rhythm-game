@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.game-container {
+    display: flex;
+    height: 100vh;
+}
+
+.song-info {
+    width: 30%;
+    padding: 20px;
+    background-color: #2a2a2a;
+}
+
+.song-info img {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.song-list {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.song-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.song-list li {
+    padding: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.song-list li:hover {
+    background-color: #3a3a3a;
+}
+
+.song-list li.selected {
+    background-color: #8e44ad;
+}
+
+.navigation {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.navigation button {
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    background-color: #8e44ad;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+h1, h2 {
+    color: #8e44ad;
+}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Rhythm Game Result</title>
-    <link rel="stylesheet" href="../static/css/result.css">
+    <link rel="stylesheet" href="../css/result.css">
 </head>
 
 <body>
@@ -12,16 +12,16 @@
         <!-- Top Section (Song Title and Difficulty) -->
         <div class="top-bar">
             <div class="song-info">
-                <h1>Kamui</h1>
-                <span>6 BUTTON TUNES</span>
+                <h1>랜덤 노트</h1>
+                <span>4 BUTTON TUNES</span>
             </div>
         </div>
 
         <!-- Center Section (Grade, Score, Accuracy) -->
         <div class="center-section">
-            <div class="grade">A</div>
+            <div id="grade" class="grade">A</div>
             <div class="score">935,253</div>
-            <div class="accuracy">93.52%</div>
+            <div class="rate">93.52%</div>
         </div>
 
         <!-- Left Section (Combo Breakdown) -->
@@ -41,6 +41,9 @@
         <div class="right-panel">
             <h2>랭킹</h2>
             <div class="ranking-details">
+                <ul id="ranking-list">
+                    <!-- 랭킹이 여기 삽입됩니다 -->
+                </ul>
                 <p>Global Rank: <span>421</span></p>
                 <p>Your Score Rank: <span>23</span></p>
             </div>
@@ -52,7 +55,8 @@
             <button class="replay-btn">다시하기</button>
         </div>
     </div>
-    <script src="../static/js/result.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/result.js"></script>
 </body>
 
 </html>
