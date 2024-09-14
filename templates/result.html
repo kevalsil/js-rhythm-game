@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="kr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rhythm Game Result</title>
+    <link rel="stylesheet" href="../static/css/result.css">
+</head>
+
+<body>
+    <div class="result-screen">
+        <!-- Top Section (Song Title and Difficulty) -->
+        <div class="top-bar">
+            <div class="song-info">
+                <h1>Kamui</h1>
+                <span>6 BUTTON TUNES</span>
+            </div>
+        </div>
+
+        <!-- Center Section (Grade, Score, Accuracy) -->
+        <div class="center-section">
+            <div class="grade">A</div>
+            <div class="score">935,253</div>
+            <div class="accuracy">93.52%</div>
+        </div>
+
+        <!-- Left Section (Combo Breakdown) -->
+        <div class="left-panel">
+            <h2>점수 상세정보</h2>
+            <ul>
+                <li>최대 연속 콤보: <span>40</span></li>
+                <li>총 콤보: <span>40</span></li>
+                <li>완벽: <span>1502</span></li>
+                <li>성공: <span>202</span></li>
+                <li>나쁨: <span>100</span></li>
+                <li>실패: <span>40</span></li>
+            </ul>
+        </div>
+
+        <!-- Right Section (Ranking) -->
+        <div class="right-panel">
+            <h2>랭킹</h2>
+            <div class="ranking-details">
+                <p>Global Rank: <span>421</span></p>
+                <p>Your Score Rank: <span>23</span></p>
+            </div>
+        </div>
+
+        <!-- 추가: 메인화면으로 & 다시하기 버튼 -->
+        <div class="action-buttons">
+            <button class="main-menu-btn">메인화면으로</button>
+            <button class="replay-btn">다시하기</button>
+        </div>
+    </div>
+    <script src="../static/js/result.js"></script>
+</body>
+
+</html>

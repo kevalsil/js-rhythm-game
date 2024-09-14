@@ -4,6 +4,7 @@ const GOOD_SCORE = 1;
 const BAD_PENALTY = 40;
 const MISS_PENALTY = 80;
 const MAX_HP = 1000;
+const BASE_SCORE = 100; //노트 한 개 칠 때마다 얻는 점수
 
 const theme = document.querySelector(':root');
 const styles = window.getComputedStyle(theme);
@@ -52,6 +53,8 @@ const gameState = {
     badCount: 0,
     missCount: 0,
     passCount: 0,
+    score: 0, //최종 점수
+    maxCombo: 0, //가장 많은 콤보 수
     myHP: MAX_HP,
     esc: false,
     escMenu: 1,
@@ -72,8 +75,8 @@ const gameState = {
 //////////게임 기본 설정///////////
 const gameSettings = {
     passCountAll: 100, //쳐야 할 전체 노트 개수
-    makeSpeed: 500, //노트 생성 속도(ms)
-    mujuk: false, //무적여부
+    makeSpeed: 150, //노트 생성 속도(ms)
+    mujuk: true, //무적여부
     longNoteTermList: [1, 2, 4, 4], //롱노트 기간 개수
     noteSpeed: parseInt(localStorage.getItem('noteSpeed')) || 50
 };
@@ -250,6 +253,7 @@ function comboCounter(panjung, fastslow, type, line) {
             color = 'rgb(238, 192, 39)';
             gameState.comboCount++;
             gameState.perfectCount++;
+            gameState.score += 2 * BASE_SCORE * Math.sqrt(gameState.comboCount);
             gameState.myHP = Math.min(gameState.myHP + PERFECT_SCORE, MAX_HP);
             break;
         case '성공':
@@ -257,6 +261,7 @@ function comboCounter(panjung, fastslow, type, line) {
             color = 'rgb(39, 238, 172)';
             gameState.comboCount++;
             gameState.goodCount++;
+            gameState.score += 1 * BASE_SCORE * Math.sqrt(gameState.comboCount);
             gameState.myHP = Math.min(gameState.myHP + GOOD_SCORE, MAX_HP);
             break;
         case '나쁨':
@@ -264,6 +269,7 @@ function comboCounter(panjung, fastslow, type, line) {
             color = 'rgb(143, 86, 197)';
             gameState.comboCount = 0;
             gameState.badCount++;
+            gameState.score += 0.5 * BASE_SCORE * Math.sqrt(gameState.comboCount);
             if (!gameSettings.mujuk) {
                 gameState.myHP -= type === 'sn' ? BAD_PENALTY : BAD_PENALTY / 4;
             }
@@ -288,6 +294,11 @@ function comboCounter(panjung, fastslow, type, line) {
     }
 
     gameState.passCount++;
+
+    //콤보 최대치 기록
+    if(gameState.maxCombo < gameState.comboCount){
+        gameState.maxCombo = gameState.comboCount;
+    }
 
     updateLongNoteState(type, line, panjung, fastslow);
     updateUI(text, textDetail, color, colorDetail);
@@ -510,8 +521,52 @@ function checkGameEnd() {
             endingText = "ALL<br>COMBO";
         }
         showEnding(endingText);
+
+        // 예시: 게임 끝났을 때 호출
+        rate = (((gameState.perfectCount + gameState.goodCount * 0.6 + gameState.badCount * 0.2) / gameState.passCount) * 100).toFixed(2);
+        console.log(rate, Math.round(gameState.score), gameState.maxCombo)
+        sendScoreToServer('익명', Math.round(gameState.score), gameState.maxCombo, rate);
+        // 예시: 랭킹을 가져와 HTML에 표시
+        //fetchRankings();
     }
 }
+
+function sendScoreToServer(name, score, combo, accuracy) {
+    fetch('http://172.30.1.68:5000/submit-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: name,
+            score: score,
+            combo: combo,
+            accuracy: accuracy
+        })
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function fetchRankings() {
+    fetch('http://172.30.1.68:5000/rankings')
+        .then(response => response.json())
+        .then(data => {
+            let rankingHtml = '';
+            data.forEach((rank, index) => {
+                rankingHtml += `<li>${index + 1}. ${rank.name} - ${rank.score}점, 콤보: ${rank.combo}, 정확도: ${rank.accuracy}%</li>`;
+            });
+            document.getElementById('ranking-list').innerHTML = rankingHtml;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+  
+  
 
 function showEnding(endingText) {
     setTimeout(function () {
