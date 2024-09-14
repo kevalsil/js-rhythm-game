@@ -1,8 +1,8 @@
 // 샘플 곡 데이터 (실제로는 서버에서 가져올 데이터)
 const songs = [
-    { id: 1, title: "Kamui", artist: "T.Hangneil", difficulty: "MAXIMUM", bpm: 210, thumbnail: "https://example.com/kamui.jpg" },
-    { id: 2, title: "Ghost Voices", artist: "Virtual Self", difficulty: "HARD", bpm: 128, thumbnail: "https://example.com/ghost_voices.jpg" },
-    { id: 3, title: "Grid System", artist: "Endorfin.", difficulty: "NORMAL", bpm: 175, thumbnail: "https://example.com/grid_system.jpg" },
+    { id: 1, title: "예시1", artist: "--", difficulty: "MAXIMUM", bpm: 210, thumbnail: "https://example.com/-.jpg" },
+    { id: 2, title: "예시2", artist: "--", difficulty: "HARD", bpm: 128, thumbnail: "https://example.com/--.jpg" },
+    { id: 3, title: "예시3", artist: "--", difficulty: "NORMAL", bpm: 175, thumbnail: "https://example.com/---.jpg" },
     // 더 많은 곡 추가...
 ];
 
@@ -48,7 +48,7 @@ function handleKeyDown(e) {
 
 function startGame() {
     const selectedSong = songs[selectedIndex];
-    alert(`Starting game with song: ${selectedSong.title}`);
+    alert(`이 모드로 시작하시겠습니까?: ${selectedSong.title}`);
     // 여기에 게임 시작 로직 추가
 
     window.location.href = 'rhythm.html'
