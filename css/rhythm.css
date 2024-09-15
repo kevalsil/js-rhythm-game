@@ -5,6 +5,16 @@ root {
     font-family: '강한공군체';
 }
 
+html {
+    font-size: 100%; /* 기본 크기 */
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 70%; /* 모바일에서는 기본 크기를 70%로 줄임 */
+    }
+}
+
 /* 기본 스타일 (데스크톱) */
 #container {
     position: fixed;
@@ -278,6 +288,12 @@ root {
     transition: all 0.1s;
 }
 
+@media (max-width: 768px) {
+    .footerBtn {
+        width: 90%;
+    }
+}
+
 .footerBtnText {
     position: absolute;
     top: 50%;
@@ -429,6 +445,13 @@ root {
     font-size: 80px;
     font-weight: 700;
     white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    #gameOver {
+        color: white;
+        font-size: 50px;
+    }
 }
 
 #gameOverReplay {
