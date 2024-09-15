@@ -612,16 +612,15 @@ function resetHealth() {
 // Event Listeners
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
-// 터치 이벤트 핸들러 추가
-domElements.lanes[0].addEventListener('touchstart', () => handleLaneTouch(1));
-domElements.lanes[1].addEventListener('touchstart', () => handleLaneTouch(2));
-domElements.lanes[2].addEventListener('touchstart', () => handleLaneTouch(3));
-domElements.lanes[3].addEventListener('touchstart', () => handleLaneTouch(4));
-
-domElements.lanes[0].addEventListener('touchend', () => handleLaneTouchRelease(1));
-domElements.lanes[1].addEventListener('touchend', () => handleLaneTouchRelease(2));
-domElements.lanes[2].addEventListener('touchend', () => handleLaneTouchRelease(3));
-domElements.lanes[3].addEventListener('touchend', () => handleLaneTouchRelease(4));
+// 각 레인에 터치/클릭 이벤트 추가
+domElements.footers.forEach((footer, index) => {
+    footer.addEventListener('mousedown', () => handleLaneKeyDown(index + 1));
+    footer.addEventListener('mouseup', () => handleLaneKeyUp(index + 1));
+    
+    // 모바일 터치를 위한 touch 이벤트 추가
+    footer.addEventListener('touchstart', () => handleLaneKeyDown(index + 1));
+    footer.addEventListener('touchend', () => handleLaneKeyUp(index + 1));
+});
 
 domElements.escConnectBtn.addEventListener('click', handleEscConnect);
 domElements.escReplayBtn.addEventListener('click', handleEscReplay);
@@ -670,16 +669,28 @@ function handleLaneKeyDown(index) {
     }
 }
 
-// 터치 이벤트 핸들러 정의
-function handleLaneTouch(lane) {
-    handleLaneKeyDown(lane);
-    gameState.check[lane - 1] = true;
-    gameState.press[lane - 1] = true;
-    updateLaneUI(lane, true);
+//DFJK 판정
+//4키 입력하고 손 땠을 때 누름 판정 false로
+function handleKeyUp(e) {
+    const keyCodeToIndex = { 68: 1, 70: 2, 74: 3, 75: 4 };
+    const index = keyCodeToIndex[e.keyCode];
+    if (index) {
+        gameState.check[index - 1] = false;
+        gameState.press[index - 1] = false;
+        updateLaneUI(index, false);
+    }
 }
 
-function handleLaneTouchRelease(lane) {
-    handleKeyUp({ keyCode: {68: 1, 70: 2, 74: 3, 75: 4}[lane] });
+function handleLaneKeyUp(index) {
+    // 인덱스가 유효한 경우에만 처리
+    if (index >= 1 && index <= 4) {
+        // 게임 상태에서 해당 레인의 체크와 프레스 상태를 false로 설정
+        gameState.check[index - 1] = false;
+        gameState.press[index - 1] = false;
+        
+        // UI 업데이트: 해당 레인에서 손을 뗀 상태로 변경
+        updateLaneUI(index, false);
+    }
 }
 
 function updateLaneUI(index, isKeyDown) {
@@ -758,18 +769,6 @@ function navigateEscMenu(direction) {
     document.getElementById('escBtnBox').children[gameState.escMenu - 1].classList.toggle('escBtnSelect');
     gameState.escMenu = ((gameState.escMenu - 1 + direction + 4) % 4) + 1;
     document.getElementById('escBtnBox').children[gameState.escMenu - 1].classList.toggle('escBtnSelect');
-}
-
-//DFJK 판정
-//4키 입력하고 손 땠을 때 누름 판정 false로
-function handleKeyUp(e) {
-    const keyCodeToIndex = { 68: 1, 70: 2, 74: 3, 75: 4 };
-    const index = keyCodeToIndex[e.keyCode];
-    if (index) {
-        gameState.check[index - 1] = false;
-        gameState.press[index - 1] = false;
-        updateLaneUI(index, false);
-    }
 }
 
 //ESC 이어하기
