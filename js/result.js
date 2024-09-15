@@ -27,6 +27,8 @@ const domElements = {
 };
 
 // localStorage에서 값 읽어오기
+const song = localStorage.getItem('song');
+const player = localStorage.getItem('player');
 const score = localStorage.getItem('score');
 const rate = localStorage.getItem('rate');
 const maxCombo = localStorage.getItem('maxCombo');
@@ -83,22 +85,101 @@ function updateRatingDisplay(rate) {
     gradeElement.style.backgroundSize = '200% 100%'; // Make gradient move
 }
 
-//fetchRankings();
 
-// 값 삭제
-localStorage.removeItem('score');
-localStorage.removeItem('rate');
-localStorage.removeItem('maxCombo');
-localStorage.removeItem('totalCombo');
-localStorage.removeItem('perfectCount');
-localStorage.removeItem('goodCount');
-localStorage.removeItem('badCount');
-localStorage.removeItem('missCount');
+// 랭킹 불러오기
+function fetchRankings() {
+    fetch(`http://api.kevalsil.com/rankings?song=${encodeURIComponent(song)}`)
+        .then(response => response.json())
+        .then(data => {
+            let rankingHtml = '';
+            let yourRank = null; // 플레이어가 랭킹에 포함되었는지 확인하기 위한 변수
+            
+            data.forEach((rank, index) => {
+                // 방금 플레이한 점수와 비교하여 랭킹 안에 있으면 노란색 강조
+                const isCurrentPlayer = (rank.player === player && rank.score === score && rank.rate === rate);
+                
+                rankingHtml += `<li style="color: ${isCurrentPlayer ? 'yellow' : 'white'}">
+                    ${index + 1}. ${rank.player} - ${rank.score}점, rate: ${rank.rate}%
+                </li>`;
+                
+                // 내 랭킹 위치를 저장
+                if (isCurrentPlayer) {
+                    yourRank = index + 1;
+                }
+            });
+
+            document.getElementById('ranking-list').innerHTML = rankingHtml;
+            document.getElementById('your-rank').textContent = yourRank ? yourRank : '순위권 밖';
+            
+            // 내 점수 표시
+            document.getElementById('your-score-details').textContent = `${score}점, rate: ${rate}%`;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// 점수 서버로 전송
+function sendScoreToServer(song, player, score, rate) {
+    if (localStorage.getItem('scoreSubmitted') === 'true') {
+        // 이미 점수를 제출한 경우, 새로 제출하지 않음
+        console.log('Score already submitted.');
+        fetchRankings();
+        return;
+    }
+
+    fetch('http://api.kevalsil.com/submit-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            song: song,
+            player: player,
+            score: score,
+            rate: rate
+        })
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Success:', data);
+            // 점수 전송 후 랭킹 새로고침
+            fetchRankings();
+            // 점수 제출 상태 저장
+            localStorage.setItem('scoreSubmitted', 'true');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// 방금 플레이한 점수 서버로 전송 후 랭킹 새로고침
+sendScoreToServer(song, player, parseInt(score, 10), parseFloat(rate));
 
 domElements.mainMenuBtn.addEventListener('click', () => {
+    // 값 삭제
+    localStorage.removeItem('song');
+    localStorage.removeItem('score');
+    localStorage.removeItem('rate');
+    localStorage.removeItem('maxCombo');
+    localStorage.removeItem('totalCombo');
+    localStorage.removeItem('perfectCount');
+    localStorage.removeItem('goodCount');
+    localStorage.removeItem('badCount');
+    localStorage.removeItem('missCount');
+    localStorage.removeItem('scoreSubmitted');
+
     window.location.href = 'main.html'; // Navigate to the main menu page
 });
 
 domElements.replayBtn.addEventListener('click', () => {
+    localStorage.removeItem('score');
+    localStorage.removeItem('rate');
+    localStorage.removeItem('maxCombo');
+    localStorage.removeItem('totalCombo');
+    localStorage.removeItem('perfectCount');
+    localStorage.removeItem('goodCount');
+    localStorage.removeItem('badCount');
+    localStorage.removeItem('missCount');
+    localStorage.removeItem('scoreSubmitted');
+
     window.location.href = 'rhythm.html'; // Navigate to the replay page
 });

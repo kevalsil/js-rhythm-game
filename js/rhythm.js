@@ -535,9 +535,6 @@ function checkGameEnd() {
         localStorage.setItem('missCount', gameState.missCount);
 
         showEnding(endingText);
-
-        //서버로 랭킹 정보 전송
-        //sendScoreToServer('노래제목', '익명', Math.round(gameState.score), rate);
     }
 }
 

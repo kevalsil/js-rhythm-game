@@ -8,6 +8,28 @@ const songs = [
 
 let selectedIndex = 0;
 
+localStorage.removeItem('scoreSubmitted');
+
+// localStorage에 저장된 닉네임 확인
+let nickname = localStorage.getItem('player');
+
+if (!nickname) {
+    // 닉네임이 없으면 fetch로 가져와서 닉네임 생성 후 저장
+    fetch('https://raw.githubusercontent.com/kevalsil/js-random-nickname-generator/main/randomNicknameGenerator.js')
+        .then(response => response.text())
+        .then(scriptContent => {
+            eval(scriptContent);
+            nickname = getRandomNickname();
+            
+            // 닉네임을 localStorage에 저장
+            localStorage.setItem('player', nickname);
+            console.log('새 닉네임 생성:', nickname);
+        })
+        .catch(error => console.error('닉네임 생성기 가져오기 오류:', error));
+} else {
+    console.log('기존 닉네임 유지:', nickname);
+}
+
 function renderSongs() {
     const songList = document.getElementById('songs');
     songList.innerHTML = '';
@@ -49,7 +71,9 @@ function handleKeyDown(e) {
 function startGame() {
     const selectedSong = songs[selectedIndex];
     alert(`이 모드로 시작하시겠습니까?: ${selectedSong.title}`);
-    // 여기에 게임 시작 로직 추가
+
+    // 노래 정보(임시)
+    localStorage.setItem('song', 'RNL15105'); //랜덤노트(RN) + 롱노트 있음(L) / 노트속도(150)/ 노트개수(100) / 체력난이도(1~9) (기본값: 5) /
 
     window.location.href = 'rhythm.html'
 }
