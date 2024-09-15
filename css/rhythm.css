@@ -27,15 +27,6 @@ root {
     }
 }
 
-/* 추가로 작은 모바일 화면 대응 */
-@media (max-width: 480px) {
-    #container {
-        top: 50%;
-        transform: translate(-50%, -50%);
-        height: 70%; /* 화면의 60% 정도를 차지 */
-    }
-}
-
 @keyframes stageClearAnimation {
     25% {
         transform: translate(calc(-50% + 10px), 0);

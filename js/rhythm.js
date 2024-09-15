@@ -612,6 +612,16 @@ function resetHealth() {
 // Event Listeners
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
+// 터치 이벤트 핸들러 추가
+domElements.lanes[0].addEventListener('touchstart', () => handleLaneTouch(1));
+domElements.lanes[1].addEventListener('touchstart', () => handleLaneTouch(2));
+domElements.lanes[2].addEventListener('touchstart', () => handleLaneTouch(3));
+domElements.lanes[3].addEventListener('touchstart', () => handleLaneTouch(4));
+
+domElements.lanes[0].addEventListener('touchend', () => handleLaneTouchRelease(1));
+domElements.lanes[1].addEventListener('touchend', () => handleLaneTouchRelease(2));
+domElements.lanes[2].addEventListener('touchend', () => handleLaneTouchRelease(3));
+domElements.lanes[3].addEventListener('touchend', () => handleLaneTouchRelease(4));
 
 domElements.escConnectBtn.addEventListener('click', handleEscConnect);
 domElements.escReplayBtn.addEventListener('click', handleEscReplay);
@@ -738,6 +748,7 @@ function navigateEscMenu(direction) {
     document.getElementById('escBtnBox').children[gameState.escMenu - 1].classList.toggle('escBtnSelect');
 }
 
+//DFJK 판정
 //4키 입력하고 손 땠을 때 누름 판정 false로
 function handleKeyUp(e) {
     const keyCodeToIndex = { 68: 1, 70: 2, 74: 3, 75: 4 };
@@ -748,6 +759,18 @@ function handleKeyUp(e) {
         updateLaneUI(index, false);
     }
 }
+// 터치 이벤트 핸들러 정의
+function handleLaneTouch(lane) {
+    handleLaneKeyDown(lane);
+    gameState.check[lane - 1] = true;
+    gameState.press[lane - 1] = true;
+    updateLaneUI(lane, true);
+}
+
+function handleLaneTouchRelease(lane) {
+    handleKeyUp({ keyCode: {68: 1, 70: 2, 74: 3, 75: 4}[lane] });
+}
+
 //ESC 이어하기
 function handleEscConnect() {
     domElements.escContainer.style.opacity = '0';
