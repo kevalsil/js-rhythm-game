@@ -609,89 +609,76 @@ function resetHealth() {
 }
 
 
-// Event Listeners
+// 상수 정의
+const KEYS = {
+    D: 68,
+    F: 70,
+    J: 74,
+    K: 75,
+    ESC: 27,
+    ENTER: 13,
+    ONE: 49,
+    TWO: 50
+};
+const LANES = [KEYS.D, KEYS.F, KEYS.J, KEYS.K];
+
+// 이벤트 리스너 등록
 window.addEventListener('keydown', handleKeyDown);
 window.addEventListener('keyup', handleKeyUp);
+
 // 각 레인에 터치/클릭 이벤트 추가
 domElements.footers.forEach((footer, index) => {
-    footer.addEventListener('mousedown', () => handleLaneKeyDown(index + 1));
-    footer.addEventListener('mouseup', () => handleLaneKeyUp(index + 1));
-    
-    // 모바일 터치를 위한 touch 이벤트 추가
-    footer.addEventListener('touchstart', () => handleLaneKeyDown(index + 1));
-    footer.addEventListener('touchend', () => handleLaneKeyUp(index + 1));
+    footer.addEventListener('mousedown', () => handleLaneInteraction(index + 1, true));
+    footer.addEventListener('mouseup', () => handleLaneInteraction(index + 1, false));
+    footer.addEventListener('touchstart', () => handleLaneInteraction(index + 1, true));
+    footer.addEventListener('touchend', () => handleLaneInteraction(index + 1, false));
 });
 
+// 기타 버튼 이벤트 등록
 domElements.escConnectBtn.addEventListener('click', handleEscConnect);
 domElements.escReplayBtn.addEventListener('click', handleEscReplay);
 domElements.escSettingBtn.addEventListener('click', handleEscSetting);
 domElements.escLobbyBtn.addEventListener('click', handleEscLobby);
 domElements.gameOverReplay.addEventListener('click', handleGameOverReplay);
 
+
+// 키 입력 핸들러
 function handleKeyDown(e) {
-    const keyCodeActions = {
-        68: () => handleLaneKeyDown(1), // D
-        70: () => handleLaneKeyDown(2), // F
-        74: () => handleLaneKeyDown(3), // J
-        75: () => handleLaneKeyDown(4), // K
-        27: handleEscKey, // ESC
-        49: decreaseNoteSpeed, // 1
-        50: increaseNoteSpeed // 2
-    };
+    const action = {
+        [KEYS.D]: () => handleLaneInteraction(1, true),
+        [KEYS.F]: () => handleLaneInteraction(2, true),
+        [KEYS.J]: () => handleLaneInteraction(3, true),
+        [KEYS.K]: () => handleLaneInteraction(4, true),
+        [KEYS.ESC]: handleEscKey,
+        [KEYS.ONE]: decreaseNoteSpeed,
+        [KEYS.TWO]: increaseNoteSpeed
+    }[e.keyCode];
 
-    const action = keyCodeActions[e.keyCode];
-    if (action) {
-        action();
-    }
+    if (action) action();
 
-    if (gameState.esc) {
-        handleEscMenuNavigation(e);
-    }
-
-    if (gameState.gameOver && domElements.gameOverReplay.style.opacity === '1' && e.keyCode === 13) {
+    if (gameState.esc) handleEscMenuNavigation(e);
+    if (gameState.gameOver && domElements.gameOverReplay.style.opacity === '1' && e.keyCode === KEYS.ENTER) {
         handleGameOverReplay();
     }
 }
 
-function handleLaneKeyDown(index) {
-    if (!gameState.check[index - 1] && !gameState.press[index - 1]) {
-        gameState.check[index - 1] = true;
-        gameState.press[index - 1] = true;
-        if (!gameState.pressLongNoteYN[index - 1]) {
-            // Long note handling logic here if needed
-            //롱노트 누르는게 아니면 누르기 해제
-            /*
-                setTimeout(function(){
-                    checkfindexArray] = false;
-                },100); */
-        }
-        updateLaneUI(index, true);
-    }
-}
-
-//DFJK 판정
-//4키 입력하고 손 땠을 때 누름 판정 false로
+// 키 해제 핸들러
 function handleKeyUp(e) {
-    const keyCodeToIndex = { 68: 1, 70: 2, 74: 3, 75: 4 };
-    const index = keyCodeToIndex[e.keyCode];
-    if (index) {
-        gameState.check[index - 1] = false;
-        gameState.press[index - 1] = false;
-        updateLaneUI(index, false);
+    if (LANES.includes(e.keyCode)) {
+        const index = LANES.indexOf(e.keyCode) + 1;
+        handleLaneInteraction(index, false);
     }
 }
 
-function handleLaneKeyUp(index) {
-    // 인덱스가 유효한 경우에만 처리
+// 레인 상호작용 핸들러
+function handleLaneInteraction(index, isPressed) {
     if (index >= 1 && index <= 4) {
-        // 게임 상태에서 해당 레인의 체크와 프레스 상태를 false로 설정
-        gameState.check[index - 1] = false;
-        gameState.press[index - 1] = false;
-        
-        // UI 업데이트: 해당 레인에서 손을 뗀 상태로 변경
-        updateLaneUI(index, false);
+        gameState.check[index - 1] = isPressed;
+        gameState.press[index - 1] = isPressed;
+        updateLaneUI(index, isPressed);
     }
 }
+
 
 function updateLaneUI(index, isKeyDown) {
     const lane = domElements.lanes[index - 1];
