@@ -670,6 +670,18 @@ function handleLaneKeyDown(index) {
     }
 }
 
+// 터치 이벤트 핸들러 정의
+function handleLaneTouch(lane) {
+    handleLaneKeyDown(lane);
+    gameState.check[lane - 1] = true;
+    gameState.press[lane - 1] = true;
+    updateLaneUI(lane, true);
+}
+
+function handleLaneTouchRelease(lane) {
+    handleKeyUp({ keyCode: {68: 1, 70: 2, 74: 3, 75: 4}[lane] });
+}
+
 function updateLaneUI(index, isKeyDown) {
     const lane = domElements.lanes[index - 1];
     const footer = domElements.footers[index - 1];
@@ -758,17 +770,6 @@ function handleKeyUp(e) {
         gameState.press[index - 1] = false;
         updateLaneUI(index, false);
     }
-}
-// 터치 이벤트 핸들러 정의
-function handleLaneTouch(lane) {
-    handleLaneKeyDown(lane);
-    gameState.check[lane - 1] = true;
-    gameState.press[lane - 1] = true;
-    updateLaneUI(lane, true);
-}
-
-function handleLaneTouchRelease(lane) {
-    handleKeyUp({ keyCode: {68: 1, 70: 2, 74: 3, 75: 4}[lane] });
 }
 
 //ESC 이어하기
