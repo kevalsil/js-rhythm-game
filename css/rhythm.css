@@ -3,9 +3,9 @@ root {
     --myHPpercent: 100;
 
     font-family: '강한공군체';
-
 }
 
+/* 기본 스타일 (데스크톱) */
 #container {
     position: fixed;
     top: 0;
@@ -16,7 +16,24 @@ root {
     min-width: 500px;
     height: 100%;
     user-select: none;
+}
 
+/* 모바일 화면 대응 스타일 */
+@media (max-width: 768px) {
+    #container {
+        width: 90%; /* 화면의 전체 너비를 사용 */
+        min-width: auto; /* 최소 너비 제한 제거 */
+        border: 2px solid rgb(51, 54, 68); /* 모바일에서 border 두께 줄이기 */
+    }
+}
+
+/* 추가로 작은 모바일 화면 대응 */
+@media (max-width: 480px) {
+    #container {
+        top: 50%;
+        transform: translate(-50%, -50%);
+        height: 70%; /* 화면의 60% 정도를 차지 */
+    }
 }
 
 @keyframes stageClearAnimation {
