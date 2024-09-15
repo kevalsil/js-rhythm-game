@@ -35,13 +35,65 @@ function renderSongs() {
     songList.innerHTML = '';
     songs.forEach((song, index) => {
         const li = document.createElement('li');
+        //li.classList.add('song-item');
         li.textContent = song.title;
-        li.classList.toggle('selected', index === selectedIndex);
+
+        // Create and append the start button
+        const startButton = document.createElement('button');
+        startButton.textContent = 'Start';
+        startButton.classList.add('start-button');
+        startButton.style.display = (index === selectedIndex) ? 'inline-block' : 'none';
+        startButton.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent triggering the li click event
+            startGame();
+        });
+
+        li.appendChild(startButton);
         li.addEventListener('click', () => selectSong(index));
+        
+        // Add or remove the selected class
+        if (index === selectedIndex) {
+            li.classList.add('selected');
+        } else {
+            li.classList.remove('selected');
+        }
+
         songList.appendChild(li);
     });
     updateSongInfo();
 }
+
+function selectSong(index) {
+    selectedIndex = index;
+    renderSongs();
+}
+
+
+// Add styles for the start button
+const style = document.createElement('style');
+style.textContent = `
+    .start-button {
+        display: none;
+        position: absolute;
+        height: 50%;
+        width: 100px;
+        right: 10px;
+        top: 50%;
+        transform: translate(0, -50%);
+        background-color: #2ecc71;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .start-button:hover {
+        background-color: #27ae60;
+    }
+`;
+document.head.appendChild(style);
+
 
 function updateSongInfo() {
     const song = songs[selectedIndex];
@@ -50,11 +102,6 @@ function updateSongInfo() {
     document.getElementById('song-artist').textContent = `Artist: ${song.artist}`;
     document.getElementById('song-difficulty').textContent = `Difficulty: ${song.difficulty}`;
     document.getElementById('song-bpm').textContent = `BPM: ${song.bpm}`;
-}
-
-function selectSong(index) {
-    selectedIndex = index;
-    renderSongs();
 }
 
 function handleKeyDown(e) {
